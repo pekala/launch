@@ -1,5 +1,5 @@
 import React from "react";
-import { Badge, Box, SimpleGrid, Text } from "@chakra-ui/core";
+import { Badge, Box, SimpleGrid, Text, Flex, IconButton } from "@chakra-ui/core";
 import { Link } from "react-router-dom";
 
 import Error from "./error";
@@ -64,10 +64,19 @@ function LaunchPadItem({ launchPad }) {
             {launchPad.attempted_launches} attempted &bull; {launchPad.successful_launches} succeeded
           </Box>
         </Box>
+        <Flex justifyContent="space-between">
+          <Box mt="1" fontWeight="semibold" as="h4" lineHeight="tight" isTruncated>
+            {launchPad.name}
+          </Box>
+          <IconButton
+            aria-label="Favorite icon"
+            icon="star"
+            onClick={(e) => {
+              e.preventDefault();
+            }}
+          />
+        </Flex>
 
-        <Box mt="1" fontWeight="semibold" as="h4" lineHeight="tight" isTruncated>
-          {launchPad.name}
-        </Box>
         <Text color="gray.500" fontSize="sm">
           {launchPad.vehicles_launched.join(", ")}
         </Text>

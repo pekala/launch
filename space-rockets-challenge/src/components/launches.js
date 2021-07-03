@@ -1,5 +1,5 @@
 import React from "react";
-import { Badge, Box, Image, SimpleGrid, Text, Flex } from "@chakra-ui/core";
+import { Badge, Box, Image, SimpleGrid, Text, Flex, IconButton } from "@chakra-ui/core";
 import { format as timeAgo } from "timeago.js";
 import { Link } from "react-router-dom";
 
@@ -17,7 +17,7 @@ export default function Launches() {
     order: "desc",
     sort: "launch_date_utc",
   });
-  console.log(data, error);
+
   return (
     <div>
       <Breadcrumbs items={[{ label: "Home", to: "/" }, { label: "Launches" }]} />
@@ -36,6 +36,7 @@ export default function Launches() {
 }
 
 export function LaunchItem({ launch }) {
+
   return (
     <Box
       as={Link}
@@ -88,9 +89,19 @@ export function LaunchItem({ launch }) {
           </Box>
         </Box>
 
-        <Box mt="1" fontWeight="semibold" as="h4" lineHeight="tight" isTruncated>
-          {launch.mission_name}
-        </Box>
+        <Flex justifyContent="space-between">
+          <Box mt="1" fontWeight="semibold" as="h4" lineHeight="tight" isTruncated>
+            {launch.mission_name}
+          </Box>
+          <IconButton
+            aria-label="Favorite icon"
+            icon="star"
+            onClick={(e) => {
+              e.preventDefault();
+            }}
+          />
+        </Flex>
+
         <Flex>
           <Text fontSize="sm">{formatDate(launch.launch_date_utc)} </Text>
           <Text color="gray.500" ml="2" fontSize="sm">

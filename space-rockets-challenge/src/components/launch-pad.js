@@ -15,6 +15,7 @@ import {
   Spinner,
   Stack,
   AspectRatioBox,
+  IconButton,
 } from "@chakra-ui/core";
 
 import { useSpaceX } from "../utils/use-space-x";
@@ -79,19 +80,22 @@ function Header({ launchPad }) {
       <Heading color="gray.900" display="inline" mx={[2, 4]} my="2" fontSize={["md", "3xl"]} borderRadius="lg">
         {launchPad.site_name_long}
       </Heading>
-      <Stack isInline spacing="3">
-        <Badge variantColor="purple" fontSize={["sm", "md"]}>
-          {launchPad.successful_launches}/{launchPad.attempted_launches} successful
-        </Badge>
-        {launchPad.stats === "active" ? (
-          <Badge variantColor="green" fontSize={["sm", "md"]}>
-            Active
+      <Stack align="flex-end">
+        <IconButton aria-label="Favorite icon" icon="star" onClick={() => {}} />
+        <Stack isInline spacing="3">
+          <Badge variantColor="purple" fontSize={["sm", "md"]}>
+            {launchPad.successful_launches}/{launchPad.attempted_launches} successful
           </Badge>
-        ) : (
-          <Badge variantColor="red" fontSize={["sm", "md"]}>
-            Retired
-          </Badge>
-        )}
+          {launchPad.stats === "active" ? (
+            <Badge variantColor="green" fontSize={["sm", "md"]}>
+              Active
+            </Badge>
+          ) : (
+            <Badge variantColor="red" fontSize={["sm", "md"]}>
+              Retired
+            </Badge>
+          )}
+        </Stack>
       </Stack>
     </Flex>
   );

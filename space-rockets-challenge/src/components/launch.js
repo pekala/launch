@@ -20,6 +20,7 @@ import {
   AspectRatioBox,
   StatGroup,
   Tooltip,
+  IconButton,
 } from "@chakra-ui/core";
 import tzlookup from "tz-lookup";
 
@@ -96,19 +97,23 @@ function Header({ launch }) {
       >
         {launch.mission_name}
       </Heading>
-      <Stack isInline spacing="3">
-        <Badge variantColor="purple" fontSize={["xs", "md"]}>
-          #{launch.flight_number}
-        </Badge>
-        {launch.launch_success ? (
-          <Badge variantColor="green" fontSize={["xs", "md"]}>
-            Successful
+      
+      <Stack align="flex-end">
+        <IconButton aria-label="Favorite icon" icon="star" onClick={() => {}} />
+        <Stack isInline spacing="3">
+          <Badge variantColor="purple" fontSize={["xs", "md"]}>
+            #{launch.flight_number}
           </Badge>
-        ) : (
-          <Badge variantColor="red" fontSize={["xs", "md"]}>
-            Failed
-          </Badge>
-        )}
+          {launch.launch_success ? (
+            <Badge variantColor="green" fontSize={["xs", "md"]}>
+              Successful
+            </Badge>
+          ) : (
+            <Badge variantColor="red" fontSize={["xs", "md"]}>
+              Failed
+            </Badge>
+          )}
+        </Stack>
       </Stack>
     </Flex>
   );
