@@ -79,7 +79,9 @@ function LaunchPadItem({ launchPad }) {
             icon={Star}
             color={flps.has(launchPad.site_id) ? "yellow.500" : null}
             onClick={(e) => {
-              favLaunchPads.add(launchPad.site_id);
+              flps.has(launchPad.site_id)
+                ? favLaunchPads.delete(launchPad.site_id)
+                : favLaunchPads.add(launchPad.site_id);
               setFLPs(favLaunchPads.get());
               e.preventDefault();
             }}

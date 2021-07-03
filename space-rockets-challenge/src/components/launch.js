@@ -109,7 +109,9 @@ function Header({ launch }) {
           icon={Star}
           color={fls.has(launch.flight_number) ? "yellow.500" : null}
           onClick={() => {
-            favLaunches.add(launch.flight_number);
+            fls.has(launch.flight_number)
+              ? favLaunches.delete(launch.flight_number)
+              : favLaunches.add(launch.flight_number);
             setFLs(favLaunches.get());
           }}
         />

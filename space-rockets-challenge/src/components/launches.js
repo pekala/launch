@@ -103,8 +103,10 @@ export function LaunchItem({ launch }) {
             icon={Star}
             color={fls.has(launch.flight_number) ? "yellow.500" : null}
             onClick={(e) => {
-              favLaunches.add(launch.flight_number);
-              setFLs(favLaunches.get());              
+              fls.has(launch.flight_number)
+                ? favLaunches.delete(launch.flight_number)
+                : favLaunches.add(launch.flight_number);
+              setFLs(favLaunches.get());
               e.preventDefault();
             }}
           />

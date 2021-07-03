@@ -16,6 +16,13 @@ LSSet.prototype.add = function (val) {
   return valSet;
 };
 
+LSSet.prototype.delete = function (val) {
+  const valSet = this.get();
+  valSet.delete(val);
+  localStorage.setItem(this.key, JSON.stringify([...valSet]));
+  return valSet;
+};
+
 LSSet.prototype.has = function (val) {
   const valSet = this.get();
   return valSet.has(val);
