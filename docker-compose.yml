@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  web:
+    build:
+      context: space-rockets-challenge
+    container_name: web
+    tty: true
+    stdin_open: true
+    ports:
+      - 3000:3000
+    volumes:
+      - ./space-rockets-challenge:/home/web
+      - /home/web/node_modules
