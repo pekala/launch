@@ -19,7 +19,9 @@ import {
   Stack,
   AspectRatioBox,
   StatGroup,
+  Tooltip,
 } from "@chakra-ui/core";
+import tzlookup from "tz-lookup";
 
 import { useSpaceX } from "../utils/use-space-x";
 import { formatDateTime } from "../utils/format-date";
@@ -29,8 +31,11 @@ import Breadcrumbs from "./breadcrumbs";
 export default function Launch() {
   let { launchId } = useParams();
   const { data: launch, error } = useSpaceX(`/launches/${launchId}`);
+  const { data: launchSite, errorLS } = useSpaceX(launch ? `/launchpads/${launch.launch_site.site_id}` : null);
+  const { location: { latitude, longitude } = {} } = launchSite || {};
+  const launchTZ = launchSite && tzlookup(latitude, longitude);
 
-  if (error) return <Error />;
+  if (error || errorLS) return <Error />;
   if (!launch) {
     return (
       <Flex justifyContent="center" alignItems="center" minHeight="50vh">
@@ -46,7 +51,7 @@ export default function Launch() {
       />
       <Header launch={launch} />
       <Box m={[3, 6]}>
-        <TimeAndLocation launch={launch} />
+        <TimeAndLocation launch={launch} launchTZ={launchTZ} />
         <RocketInfo launch={launch} />
         <Text color="gray.700" fontSize={["md", null, "lg"]} my="8">
           {launch.details}
@@ -109,7 +114,7 @@ function Header({ launch }) {
   );
 }
 
-function TimeAndLocation({ launch }) {
+function TimeAndLocation({ launch, launchTZ }) {
   return (
     <SimpleGrid columns={[1, 1, 2]} borderWidth="1px" p="4" borderRadius="md">
       <Stat>
@@ -119,7 +124,11 @@ function TimeAndLocation({ launch }) {
             Launch Date
           </Box>
         </StatLabel>
-        <StatNumber fontSize={["md", "xl"]}>{formatDateTime(launch.launch_date_local)}</StatNumber>
+        <StatNumber fontSize={["md", "xl"]}>
+          <Tooltip label={formatDateTime(launch.launch_date_local)} aria-label="launch time user local">
+            {formatDateTime(launch.launch_date_local, launchTZ)}
+          </Tooltip>
+        </StatNumber>
         <StatHelpText>{timeAgo(launch.launch_date_utc)}</StatHelpText>
       </Stat>
       <Stat>

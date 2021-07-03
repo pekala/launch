@@ -15,7 +15,8 @@
     "react-router-dom": "^6.0.0-alpha.3",
     "react-scripts": "3.4.3",
     "swr": "^0.3.0",
-    "timeago.js": "^4.0.2"
+    "timeago.js": "^4.0.2",
+    "tz-lookup": "^6.1.25"
   },
   "scripts": {
     "start": "react-scripts start",
