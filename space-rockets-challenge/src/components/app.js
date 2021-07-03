@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { Flex, Text, useDisclosure, IconButton } from "@chakra-ui/core";
+import { Menu } from "react-feather";
 
 import Launches from "./launches";
 import Launch from "./launch";
@@ -33,7 +34,7 @@ function NavBar() {
         <Text fontFamily="mono" letterSpacing="2px" fontWeight="bold" fontSize="lg">
           ¡SPACE·R0CKETS!
         </Text>
-        <IconButton aria-label="Open favorite drawer" icon="arrow-left" onClick={onOpen} variantColor="black"/>
+        <IconButton aria-label="Open favorite drawer" icon={Menu} onClick={onOpen} variantColor="black" />
       </Flex>
       <FavDrawer isOpen={isOpen} onClose={onClose} />
     </>

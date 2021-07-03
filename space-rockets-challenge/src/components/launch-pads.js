@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Badge, Box, SimpleGrid, Text, Flex, IconButton } from "@chakra-ui/core";
 import { Link } from "react-router-dom";
+import { Star } from "react-feather";
 
 import Error from "./error";
 import Breadcrumbs from "./breadcrumbs";
 import LoadMoreButton from "./load-more-button";
 import { useSpaceXPaginated } from "../utils/use-space-x";
+import { LSSet } from "../utils/use-local";
 
 const PAGE_SIZE = 12;
 
@@ -32,6 +34,9 @@ export default function LaunchPads() {
 }
 
 function LaunchPadItem({ launchPad }) {
+  const favLaunchPads = new LSSet("flp");
+  const [flps, setFLPs] = useState(favLaunchPads.get());
+
   return (
     <Box
       as={Link}
@@ -69,9 +74,13 @@ function LaunchPadItem({ launchPad }) {
             {launchPad.name}
           </Box>
           <IconButton
+            variant="ghost"
             aria-label="Favorite icon"
-            icon="star"
+            icon={Star}
+            color={flps.has(launchPad.site_id) ? "yellow.500" : null}
             onClick={(e) => {
+              favLaunchPads.add(launchPad.site_id);
+              setFLPs(favLaunchPads.get());
               e.preventDefault();
             }}
           />

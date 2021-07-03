@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { Badge, Box, Image, SimpleGrid, Text, Flex, IconButton } from "@chakra-ui/core";
 import { format as timeAgo } from "timeago.js";
 import { Link } from "react-router-dom";
+import { Star } from "react-feather";
 
 import { useSpaceXPaginated } from "../utils/use-space-x";
 import { formatDate } from "../utils/format-date";
 import Error from "./error";
 import Breadcrumbs from "./breadcrumbs";
 import LoadMoreButton from "./load-more-button";
+import { LSSet } from "../utils/use-local";
 
 const PAGE_SIZE = 12;
 
@@ -36,6 +38,8 @@ export default function Launches() {
 }
 
 export function LaunchItem({ launch }) {
+  const favLaunches = new LSSet("fl");
+  const [fls, setFLs] = useState(favLaunches.get());
 
   return (
     <Box
@@ -94,9 +98,13 @@ export function LaunchItem({ launch }) {
             {launch.mission_name}
           </Box>
           <IconButton
+            variant="ghost"
             aria-label="Favorite icon"
-            icon="star"
+            icon={Star}
+            color={fls.has(launch.flight_number) ? "yellow.500" : null}
             onClick={(e) => {
+              favLaunches.add(launch.flight_number);
+              setFLs(favLaunches.get());              
               e.preventDefault();
             }}
           />
