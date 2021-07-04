@@ -33,7 +33,7 @@ export default function LaunchPads() {
   );
 }
 
-function LaunchPadItem({ launchPad }) {
+export function LaunchPadItem({ launchPad }) {
   const favLaunchPads = new LSSet("flp");
   const [flps, setFLPs] = useState(favLaunchPads.get());
 

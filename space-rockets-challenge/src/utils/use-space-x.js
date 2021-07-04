@@ -23,6 +23,17 @@ export function useSpaceX(path, options) {
   return useSWR(path ? endpointUrl : null, fetcher);
 }
 
+export function useSpaceXMulti(path, ids, options) {
+  const data = [];
+  ids.forEach((id) => {
+    const endpointUrl = getSpaceXUrl(`${path}/${id}`, options);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const { data: partData } = useSWR(path ? endpointUrl : null, fetcher);
+    partData && data.push(partData);
+  });
+  return data;
+}
+
 export function useSpaceXPaginated(path, options) {
   return useSWRInfinite((pageIndex, previousPageData) => {
     if (previousPageData && !previousPageData.length) {

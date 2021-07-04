@@ -36,7 +36,7 @@ function NavBar() {
         </Text>
         <IconButton aria-label="Open favorite drawer" icon={Menu} onClick={onOpen} variantColor="black" />
       </Flex>
-      <FavDrawer isOpen={isOpen} onClose={onClose} />
+      {isOpen && <FavDrawer isOpen={isOpen} onClose={onClose} />}
     </>
   );
 }
