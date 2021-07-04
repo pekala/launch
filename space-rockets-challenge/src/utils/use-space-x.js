@@ -34,6 +34,27 @@ export function useSpaceXMulti(path, ids, options) {
   return data;
 }
 
+export function useSpaceXConditional(path, options, query, filter) {
+  let data;
+  const { data: allData, ...rest } = useSpaceXPaginated(path, options);
+  switch (path) {
+    case "/launches/past":
+      if (query) {
+        data = allData[0].filter((i) => i.mission_name.toLowerCase().includes(query.toLowerCase()));
+      } else {
+        data = allData;
+      }
+      console.log(data, filter);
+      if (filter !== "all") {
+        data = allData[0].filter((i) => i.launch_success === (filter === "success" ? true : null));
+      }
+      break;
+    default:
+      break;
+  }
+  return { data, ...rest };
+}
+
 export function useSpaceXPaginated(path, options) {
   return useSWRInfinite((pageIndex, previousPageData) => {
     if (previousPageData && !previousPageData.length) {
