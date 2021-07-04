@@ -1,13 +1,15 @@
-import React from "react";
-import { Badge, Box, Image, SimpleGrid, Text, Flex } from "@chakra-ui/core";
+import React, { useState } from "react";
+import { Badge, Box, Image, SimpleGrid, Text, Flex, IconButton } from "@chakra-ui/core";
 import { format as timeAgo } from "timeago.js";
 import { Link } from "react-router-dom";
+import { Star } from "react-feather";
 
 import { useSpaceXPaginated } from "../utils/use-space-x";
 import { formatDate } from "../utils/format-date";
 import Error from "./error";
 import Breadcrumbs from "./breadcrumbs";
 import LoadMoreButton from "./load-more-button";
+import { LSSet } from "../utils/use-local";
 
 const PAGE_SIZE = 12;
 
@@ -17,7 +19,7 @@ export default function Launches() {
     order: "desc",
     sort: "launch_date_utc",
   });
-  console.log(data, error);
+
   return (
     <div>
       <Breadcrumbs items={[{ label: "Home", to: "/" }, { label: "Launches" }]} />
@@ -36,6 +38,9 @@ export default function Launches() {
 }
 
 export function LaunchItem({ launch }) {
+  const favLaunches = new LSSet("fl");
+  const [fls, setFLs] = useState(favLaunches.get());
+
   return (
     <Box
       as={Link}
@@ -88,9 +93,25 @@ export function LaunchItem({ launch }) {
           </Box>
         </Box>
 
-        <Box mt="1" fontWeight="semibold" as="h4" lineHeight="tight" isTruncated>
-          {launch.mission_name}
-        </Box>
+        <Flex justifyContent="space-between">
+          <Box mt="1" fontWeight="semibold" as="h4" lineHeight="tight" isTruncated>
+            {launch.mission_name}
+          </Box>
+          <IconButton
+            variant="ghost"
+            aria-label="Favorite icon"
+            icon={Star}
+            color={fls.has(launch.flight_number) ? "yellow.500" : null}
+            onClick={(e) => {
+              fls.has(launch.flight_number)
+                ? favLaunches.delete(launch.flight_number)
+                : favLaunches.add(launch.flight_number);
+              setFLs(favLaunches.get());
+              e.preventDefault();
+            }}
+          />
+        </Flex>
+
         <Flex>
           <Text fontSize="sm">{formatDate(launch.launch_date_utc)} </Text>
           <Text color="gray.500" ml="2" fontSize="sm">

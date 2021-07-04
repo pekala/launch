@@ -1,11 +1,13 @@
-import React from "react";
-import { Badge, Box, SimpleGrid, Text } from "@chakra-ui/core";
+import React, { useState } from "react";
+import { Badge, Box, SimpleGrid, Text, Flex, IconButton } from "@chakra-ui/core";
 import { Link } from "react-router-dom";
+import { Star } from "react-feather";
 
 import Error from "./error";
 import Breadcrumbs from "./breadcrumbs";
 import LoadMoreButton from "./load-more-button";
 import { useSpaceXPaginated } from "../utils/use-space-x";
+import { LSSet } from "../utils/use-local";
 
 const PAGE_SIZE = 12;
 
@@ -31,7 +33,10 @@ export default function LaunchPads() {
   );
 }
 
-function LaunchPadItem({ launchPad }) {
+export function LaunchPadItem({ launchPad }) {
+  const favLaunchPads = new LSSet("flp");
+  const [flps, setFLPs] = useState(favLaunchPads.get());
+
   return (
     <Box
       as={Link}
@@ -64,10 +69,25 @@ function LaunchPadItem({ launchPad }) {
             {launchPad.attempted_launches} attempted &bull; {launchPad.successful_launches} succeeded
           </Box>
         </Box>
+        <Flex justifyContent="space-between">
+          <Box mt="1" fontWeight="semibold" as="h4" lineHeight="tight" isTruncated>
+            {launchPad.name}
+          </Box>
+          <IconButton
+            variant="ghost"
+            aria-label="Favorite icon"
+            icon={Star}
+            color={flps.has(launchPad.site_id) ? "yellow.500" : null}
+            onClick={(e) => {
+              flps.has(launchPad.site_id)
+                ? favLaunchPads.delete(launchPad.site_id)
+                : favLaunchPads.add(launchPad.site_id);
+              setFLPs(favLaunchPads.get());
+              e.preventDefault();
+            }}
+          />
+        </Flex>
 
-        <Box mt="1" fontWeight="semibold" as="h4" lineHeight="tight" isTruncated>
-          {launchPad.name}
-        </Box>
         <Text color="gray.500" fontSize="sm">
           {launchPad.vehicles_launched.join(", ")}
         </Text>

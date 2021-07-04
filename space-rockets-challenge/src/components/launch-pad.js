@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { MapPin, Navigation } from "react-feather";
 import {
@@ -15,9 +15,12 @@ import {
   Spinner,
   Stack,
   AspectRatioBox,
+  IconButton,
 } from "@chakra-ui/core";
+import { Star } from "react-feather";
 
 import { useSpaceX } from "../utils/use-space-x";
+import { LSSet } from "../utils/use-local";
 import Error from "./error";
 import Breadcrumbs from "./breadcrumbs";
 import { LaunchItem } from "./launches";
@@ -63,6 +66,9 @@ export default function LaunchPad() {
 const randomColor = (start = 200, end = 250) => `hsl(${start + end * Math.random()}, 80%, 90%)`;
 
 function Header({ launchPad }) {
+  const favLaunchPads = new LSSet("flp");
+  const [flps, setFLPs] = useState(favLaunchPads.get());
+
   return (
     <Flex
       background={`linear-gradient(${randomColor()}, ${randomColor()})`}
@@ -79,19 +85,32 @@ function Header({ launchPad }) {
       <Heading color="gray.900" display="inline" mx={[2, 4]} my="2" fontSize={["md", "3xl"]} borderRadius="lg">
         {launchPad.site_name_long}
       </Heading>
-      <Stack isInline spacing="3">
-        <Badge variantColor="purple" fontSize={["sm", "md"]}>
-          {launchPad.successful_launches}/{launchPad.attempted_launches} successful
-        </Badge>
-        {launchPad.stats === "active" ? (
-          <Badge variantColor="green" fontSize={["sm", "md"]}>
-            Active
+      <Stack align="flex-end">
+        <IconButton
+          aria-label="Favorite icon"
+          icon={Star}
+          color={flps.has(launchPad.site_id) ? "yellow.500" : null}
+          onClick={() => {
+            flps.has(launchPad.site_id)
+              ? favLaunchPads.delete(launchPad.site_id)
+              : favLaunchPads.add(launchPad.site_id);
+            setFLPs(favLaunchPads.get());
+          }}
+        />
+        <Stack isInline spacing="3">
+          <Badge variantColor="purple" fontSize={["sm", "md"]}>
+            {launchPad.successful_launches}/{launchPad.attempted_launches} successful
           </Badge>
-        ) : (
-          <Badge variantColor="red" fontSize={["sm", "md"]}>
-            Retired
-          </Badge>
-        )}
+          {launchPad.stats === "active" ? (
+            <Badge variantColor="green" fontSize={["sm", "md"]}>
+              Active
+            </Badge>
+          ) : (
+            <Badge variantColor="red" fontSize={["sm", "md"]}>
+              Retired
+            </Badge>
+          )}
+        </Stack>
       </Stack>
     </Flex>
   );

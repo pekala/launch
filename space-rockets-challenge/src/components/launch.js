@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams, Link as RouterLink } from "react-router-dom";
 import { format as timeAgo } from "timeago.js";
 import { Watch, MapPin, Navigation, Layers } from "react-feather";
@@ -20,13 +20,16 @@ import {
   AspectRatioBox,
   StatGroup,
   Tooltip,
+  IconButton,
 } from "@chakra-ui/core";
 import tzlookup from "tz-lookup";
+import { Star } from "react-feather";
 
 import { useSpaceX } from "../utils/use-space-x";
 import { formatDateTime } from "../utils/format-date";
 import Error from "./error";
 import Breadcrumbs from "./breadcrumbs";
+import { LSSet } from "../utils/use-local";
 
 export default function Launch() {
   let { launchId } = useParams();
@@ -64,6 +67,9 @@ export default function Launch() {
 }
 
 function Header({ launch }) {
+  const favLaunches = new LSSet("fl");
+  const [fls, setFLs] = useState(favLaunches.get());
+
   return (
     <Flex
       bgImage={`url(${launch.links.flickr_images[0]})`}
@@ -96,19 +102,33 @@ function Header({ launch }) {
       >
         {launch.mission_name}
       </Heading>
-      <Stack isInline spacing="3">
-        <Badge variantColor="purple" fontSize={["xs", "md"]}>
-          #{launch.flight_number}
-        </Badge>
-        {launch.launch_success ? (
-          <Badge variantColor="green" fontSize={["xs", "md"]}>
-            Successful
+
+      <Stack align="flex-end">
+        <IconButton
+          aria-label="Favorite icon"
+          icon={Star}
+          color={fls.has(launch.flight_number) ? "yellow.500" : null}
+          onClick={() => {
+            fls.has(launch.flight_number)
+              ? favLaunches.delete(launch.flight_number)
+              : favLaunches.add(launch.flight_number);
+            setFLs(favLaunches.get());
+          }}
+        />
+        <Stack isInline spacing="3">
+          <Badge variantColor="purple" fontSize={["xs", "md"]}>
+            #{launch.flight_number}
           </Badge>
-        ) : (
-          <Badge variantColor="red" fontSize={["xs", "md"]}>
-            Failed
-          </Badge>
-        )}
+          {launch.launch_success ? (
+            <Badge variantColor="green" fontSize={["xs", "md"]}>
+              Successful
+            </Badge>
+          ) : (
+            <Badge variantColor="red" fontSize={["xs", "md"]}>
+              Failed
+            </Badge>
+          )}
+        </Stack>
       </Stack>
     </Flex>
   );
