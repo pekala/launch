@@ -38,3 +38,9 @@ All data is fetched from the unofficial SpaceX API V3 at
   ([Feather icons](https://feathericons.com/) wrapper for React)
 - [timeago.js](https://timeago.org/) - Tiny library to display human-readable
   relative time difference
+
+
+## DEMO
+
+- visit https://test-aa6cb.web.app for the demo with favorite feature
+- visit https://test-aa6cb--feature-new-b71b824c.web.app for the new feature demo
